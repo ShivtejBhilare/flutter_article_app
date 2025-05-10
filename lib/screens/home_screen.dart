@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:lottie/lottie.dart';
 import '../bloc/article_bloc.dart';
 import '../bloc/article_event.dart';
 import '../bloc/article_state.dart';
@@ -8,6 +9,7 @@ import '../bloc/favourite_bloc.dart';
 import '../bloc/favourite_event.dart';
 import '../bloc/favourite_state.dart';
 import '../bloc/theme_cubit.dart';
+import '../company_colors.dart'; // Import the company palette
 import '../models/article.dart';
 import 'article_detail_screen.dart';
 import 'favourite_screen.dart';
@@ -19,9 +21,12 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Articles'),
+        title: Text(
+          'Articles',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         actions: [
-          // Light/Dark Mode Toggle Button using ToggleButtons
+          // Light/Dark Mode Toggle using ToggleButtons
           BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) {
               return Padding(
@@ -61,7 +66,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: GestureDetector(
-        // Remove focus when tapping anywhere.
+        // Remove focus from any text input.
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
         },
@@ -83,23 +88,29 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
-            // Expanded widget for the list of articles (or error state)
+            // Expanded widget for list of articles (or error state)
             Expanded(
               child: BlocBuilder<ArticleBloc, ArticleState>(
                 builder: (context, state) {
-                  if (state is ArticleInitial) {
-                    context.read<ArticleBloc>().add(FetchArticles());
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is ArticleLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                  if (state is ArticleInitial || state is ArticleLoading) {
+                    if (state is ArticleInitial) {
+                      context.read<ArticleBloc>().add(FetchArticles());
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(CompanyColors.primary),
+                        strokeWidth: 3.0,
+                      ),
+                    );
                   } else if (state is ArticleLoaded) {
                     return LiquidPullToRefresh(
                       onRefresh: () async {
                         context.read<ArticleBloc>().add(FetchArticles());
                         return Future.delayed(const Duration(milliseconds: 500));
                       },
-                      color: Colors.blueAccent, // Customize as needed.
-                      backgroundColor: Colors.white,
+                      // Use logo colors for liquid refresh:
+                      color: CompanyColors.secondary, // Golden yellow refresh indicator
+                      backgroundColor: CompanyColors.background, // White background
                       height: 100,
                       child: ListView.builder(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -115,7 +126,7 @@ class HomeScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
-                                // Hero widget with a flight shuttle builder and a BlocBuilder for theme changes.
+                                // Hero widget for article title with flight shuttle builder.
                                 title: Hero(
                                   tag: 'title-${article.id}',
                                   flightShuttleBuilder: (
@@ -125,7 +136,6 @@ class HomeScreen extends StatelessWidget {
                                       BuildContext fromHeroContext,
                                       BuildContext toHeroContext,
                                       ) {
-                                    // Build using the destination's context to pick up the updated theme.
                                     return Text(
                                       article.title,
                                       style: Theme.of(toHeroContext)
@@ -136,22 +146,18 @@ class HomeScreen extends StatelessWidget {
                                   },
                                   child: BlocBuilder<ThemeCubit, ThemeMode>(
                                     builder: (context, themeMode) {
-                                      // Using the current theme data for the Text widget.
                                       return Text(
                                         article.title,
-                                        // The value of themeMode is used as key to force rebuild.
                                         key: ValueKey(themeMode),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleLarge
-                                            ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            ?.copyWith(fontWeight: FontWeight.bold),
                                       );
                                     },
                                   ),
                                 ),
-                                // Article subtitle showing a truncated article body.
+                                // Display a truncated version of the article body.
                                 subtitle: Padding(
                                   padding: const EdgeInsets.only(top: 6.0),
                                   child: Text(
@@ -164,7 +170,7 @@ class HomeScreen extends StatelessWidget {
                                         ?.copyWith(color: Colors.grey.shade600),
                                   ),
                                 ),
-                                // Toggle favourite using FavouriteBloc.
+                                // Favourite toggle button (kept unchanged: red when favourited)
                                 trailing: BlocBuilder<FavouriteBloc, FavouriteState>(
                                   builder: (context, favState) {
                                     bool isFavourite = favState is FavouriteLoaded &&
@@ -172,6 +178,7 @@ class HomeScreen extends StatelessWidget {
                                     return IconButton(
                                       icon: Icon(
                                         isFavourite ? Icons.favorite : Icons.favorite_border,
+                                        // Favourite button colors remain unchanged:
                                         color: isFavourite ? Colors.red : Colors.grey,
                                         size: 26,
                                       ),
@@ -181,7 +188,7 @@ class HomeScreen extends StatelessWidget {
                                     );
                                   },
                                 ),
-                                // Navigate to ArticleDetailScreen using a fade transition.
+                                // Navigate to ArticleDetailScreen with fade transition.
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -189,7 +196,10 @@ class HomeScreen extends StatelessWidget {
                                       pageBuilder: (_, __, ___) =>
                                           ArticleDetailScreen(article: article),
                                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                        return FadeTransition(opacity: animation, child: child);
+                                        return FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        );
                                       },
                                     ),
                                   );
@@ -201,14 +211,13 @@ class HomeScreen extends StatelessWidget {
                       ),
                     );
                   } else if (state is ArticleError) {
-                    // Show error state with pull-to-refresh enabled.
                     return LiquidPullToRefresh(
                       onRefresh: () async {
                         context.read<ArticleBloc>().add(FetchArticles());
                         return Future.delayed(const Duration(milliseconds: 500));
                       },
-                      color: Colors.blueAccent,
-                      backgroundColor: Colors.white,
+                      color: CompanyColors.secondary,
+                      backgroundColor: CompanyColors.background,
                       height: 100,
                       child: ListView(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -219,8 +228,9 @@ class HomeScreen extends StatelessWidget {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  // Optionally, add a Lottie error animation here.
                                   const Text(
-                                    'Error loading articles.',
+                                    'Error loading articles.\nPlease check your connection.',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                                   ),
@@ -232,7 +242,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     );
                   }
-                  return const Center(child: Text('No articles available'));
+                  return Center(child: Text('No articles available'));
                 },
               ),
             ),
