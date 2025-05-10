@@ -149,5 +149,5 @@ Feel free to adjust any sections or update the image paths to match your project
 
 **Shivtej Bhilare**  
 📧 [bhilareshivtejofficial@gmail.com](mailto:bhilareshivtejofficial@gmail.com)  
-[<img src="https://cdn-icons-png.flaticon.com/24/174/174857.png" alt="LinkedIn" width="24"/>](https://www.linkedin.com/in/shivtejbhilare/)
+[<img src="https://cdn-icons-png.flaticon.com/24/174/174857.png" alt="LinkedIn" width="24"/>](https://www.linkedin.com/in/shivtejbhilare/)[ shivtejbhilare](https://www.linkedin.com/in/shivtejbhilare/)
 ---
