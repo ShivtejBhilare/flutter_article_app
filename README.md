@@ -14,15 +14,15 @@ Build a mini mobile app in Flutter that displays a list of articles fetched from
 **Core Features:**
 
 - **Home Screen:**
-  - Fetch and display articles from: [https://jsonplaceholder.typicode.com/posts](https://jsonplaceholder.typicode.com/posts)
-  - Display articles in a ListView with cards showing the title and a short preview.
-  - Show a loading indicator while fetching data.
-  - Handle API errors gracefully.
+- Fetch and display articles from: [https://jsonplaceholder.typicode.com/posts](https://jsonplaceholder.typicode.com/posts)
+- Display articles in a ListView with cards showing the title and a short preview.
+- Show a loading indicator while fetching data.
+- Handle API errors gracefully.
 - **Search:**
-  - Add a search bar to filter articles by title or body (client-side search is acceptable).
+- Add a search bar to filter articles by title or body (client-side search is acceptable).
 - **Article Details Screen:**
-  - On tapping an article, navigate to a detail screen.
-  - Show the full article content (title and body).
+- On tapping an article, navigate to a detail screen.
+- Show the full article content (title and body).
 
 **Technical Expectations:**
 
@@ -43,22 +43,28 @@ Build a mini mobile app in Flutter that displays a list of articles fetched from
 
 1. **Clone the Repository:**
 
-   ```bash
-   git clone https://github.com/ShivtejBhilare/flutter_article_app
-   cd flutter_article_app
+```
 
+git clone https://github.com/ShivtejBhilare/flutter_article_app
+cd flutter_article_app
+
+```
 
 2. **Install Dependencies:**
 
-  ```bash
-    flutter pub get
+```
 
+flutter pub get
+
+```
 
 3. **Run the App:**
 
-  ```bash
-    flutter run
+```
 
+flutter run
+
+```
 
 ---
 
@@ -124,4 +130,7 @@ Feel free to adjust any sections or update the image paths to match your project
 ## Contact
 
 For any questions or feedback, please contact [Your Name/Email].
+```
 
+
+---
