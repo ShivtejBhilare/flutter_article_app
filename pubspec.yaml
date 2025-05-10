@@ -42,6 +42,7 @@ dependencies:
   connectivity_plus: ^6.1.4
   liquid_pull_to_refresh: ^3.0.1
   shared_preferences: ^2.5.3
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -72,7 +73,10 @@ flutter:
      - assets/lottie/network_error.json
      - assets/lottie/logo.json
 
-
+flutter_icons:
+  android: true               # Generate Android icons
+  ios: true                   # Generate iOS icons
+  image_path: "assets/icons/app_icon.png"
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

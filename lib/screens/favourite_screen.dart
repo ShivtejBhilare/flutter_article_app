@@ -8,7 +8,7 @@ import '../models/article.dart';
 import 'article_detail_screen.dart';
 
 class FavouriteScreen extends StatefulWidget {
-  const FavouriteScreen({Key? key}) : super(key: key);
+  const FavouriteScreen({super.key});
 
   @override
   State<FavouriteScreen> createState() => _FavouriteScreenState();
