@@ -14,15 +14,15 @@ Build a mini mobile app in Flutter that displays a list of articles fetched from
 **Core Features:**
 
 - **Home Screen:**
-- Fetch and display articles from: [https://jsonplaceholder.typicode.com/posts](https://jsonplaceholder.typicode.com/posts)
-- Display articles in a ListView with cards showing the title and a short preview.
-- Show a loading indicator while fetching data.
-- Handle API errors gracefully.
+  - Fetch and display articles from: [https://jsonplaceholder.typicode.com/posts](https://jsonplaceholder.typicode.com/posts)
+  - Display articles in a ListView with cards showing the title and a short preview.
+  - Show a loading indicator while fetching data.
+  - Handle API errors gracefully.
 - **Search:**
-- Add a search bar to filter articles by title or body (client-side search is acceptable).
+  - Add a search bar to filter articles by title or body (client-side search is acceptable).
 - **Article Details Screen:**
-- On tapping an article, navigate to a detail screen.
-- Show the full article content (title and body).
+  - On tapping an article, navigate to a detail screen.
+  - Show the full article content (title and body).
 
 **Technical Expectations:**
 
@@ -94,24 +94,40 @@ This application uses the BLoC (Business Logic Component) pattern to separate bu
 
 ## Screenshots
 
-| Feature                  | Screenshot Example                                 |
-|--------------------------|---------------------------------------------------|
-| App Icon & App Name      | ![App Icon](assets/screenshots/app_icon.png)      |
-| Splash Screen            | ![Splash Screen](assets/screenshots/splash.jpg)   |
-| Home Screen - Light Mode | ![Home Light](assets/screenshots/home_light.jpg)  |
-| Home Screen - Dark Mode  | ![Home Dark](assets/screenshots/home_dark.jpg)    |
-| Article Details Screen   | ![Details](assets/screenshots/article_details.jpg)|
+<div align="center">
 
----
+<table>
+<tr>
+ <td align="center" width="160">
+   <img src="assets/screenshots/app_icon.png" alt="App Icon" width="120" height="120"/><br/>
+   <sub>App Icon & App Name</sub>
+ </td>
+ <td align="center" width="160">
+   <img src="assets/screenshots/splash.jpg" alt="Splash Screen" width="120" height="240"/><br/>
+   <sub>Splash Screen</sub>
+ </td>
+ <td align="center" width="160">
+   <img src="assets/screenshots/home_light.jpg" alt="Home Light" width="120" height="240"/><br/>
+   <sub>Home Screen - Light Mode</sub>
+ </td>
+</tr>
+<tr>
+ <td align="center" width="160">
+   <img src="assets/screenshots/home_dark.jpg" alt="Home Dark" width="120" height="240"/><br/>
+   <sub>Home Screen - Dark Mode</sub>
+ </td>
+ <td align="center" width="160">
+   <img src="assets/screenshots/article_details.jpg" alt="Article Details" width="120" height="240"/><br/>
+   <sub>Article Details Screen</sub>
+ </td>
+ <td align="center" width="160">
+   <!-- Empty cell for symmetry -->
+ </td>
+</tr>
+</table>
 
-## Additional Information
+</div>
 
-- **Assets:**  
-Ensure all screenshot images are placed in `assets/screenshots/` and declared in `pubspec.yaml`.
-- **Submission:**  
-Include all source code along with this README file in your GitHub repository or zipped folder submission.
-
----
 
 ## About
 
@@ -121,15 +137,11 @@ Feel free to adjust any sections or update the image paths to match your project
 
 ---
 
-## License
-
-[Specify your license here, if applicable.]
-
----
 
 ## Contact
-
-For any questions or feedback, please contact [Your Name/Email].
+**Shivtej Bhilare**  
+📧 [bhilareshivtejofficial@gmail.com](mailto:bhilareshivtejofficial@gmail.com)  
+[LinkedIn: shivtejbhilare](https://www.linkedin.com/in/shivtejbhilare/)
 ```
 
 
