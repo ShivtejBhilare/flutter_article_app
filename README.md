@@ -51,13 +51,13 @@ Build a mini mobile app in Flutter that displays a list of articles fetched from
 2. **Install Dependencies:**
 
   ```bash
-  flutter pub get
+    flutter pub get
 
 
 3. **Run the App:**
 
   ```bash
-  flutter run
+    flutter run
 
 
 ---
