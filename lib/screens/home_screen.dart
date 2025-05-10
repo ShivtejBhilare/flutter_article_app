@@ -9,7 +9,7 @@ import '../bloc/favourite_bloc.dart';
 import '../bloc/favourite_event.dart';
 import '../bloc/favourite_state.dart';
 import '../bloc/theme_cubit.dart';
-import '../company_colors.dart'; // Import the company palette
+import '../company_colors.dart'; // Import your logo-based color palette
 import '../models/article.dart';
 import 'article_detail_screen.dart';
 import 'favourite_screen.dart';
@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: GestureDetector(
-        // Remove focus from any text input.
+        // Remove focus from text input when tapping anywhere.
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
         },
@@ -88,7 +88,7 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
-            // Expanded widget for list of articles (or error state)
+            // List (or error/loading state) for Articles:
             Expanded(
               child: BlocBuilder<ArticleBloc, ArticleState>(
                 builder: (context, state) {
@@ -108,9 +108,9 @@ class HomeScreen extends StatelessWidget {
                         context.read<ArticleBloc>().add(FetchArticles());
                         return Future.delayed(const Duration(milliseconds: 500));
                       },
-                      // Use logo colors for liquid refresh:
-                      color: CompanyColors.secondary, // Golden yellow refresh indicator
-                      backgroundColor: CompanyColors.background, // White background
+                      // Use logo colors for the refresh indicator.
+                      color: CompanyColors.primary, // Golden yellow refresh indicator.
+                      backgroundColor: CompanyColors.background, // White background.
                       height: 100,
                       child: ListView.builder(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -170,7 +170,7 @@ class HomeScreen extends StatelessWidget {
                                         ?.copyWith(color: Colors.grey.shade600),
                                   ),
                                 ),
-                                // Favourite toggle button (kept unchanged: red when favourited)
+                                // Favourite toggle button (kept unchanged, red for favourited).
                                 trailing: BlocBuilder<FavouriteBloc, FavouriteState>(
                                   builder: (context, favState) {
                                     bool isFavourite = favState is FavouriteLoaded &&
@@ -178,7 +178,6 @@ class HomeScreen extends StatelessWidget {
                                     return IconButton(
                                       icon: Icon(
                                         isFavourite ? Icons.favorite : Icons.favorite_border,
-                                        // Favourite button colors remain unchanged:
                                         color: isFavourite ? Colors.red : Colors.grey,
                                         size: 26,
                                       ),
@@ -188,7 +187,7 @@ class HomeScreen extends StatelessWidget {
                                     );
                                   },
                                 ),
-                                // Navigate to ArticleDetailScreen with fade transition.
+                                // Navigate to ArticleDetailScreen with a fade transition.
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -211,6 +210,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     );
                   } else if (state is ArticleError) {
+                    // In the error state, show a Lottie animation along with text.
                     return LiquidPullToRefresh(
                       onRefresh: () async {
                         context.read<ArticleBloc>().add(FetchArticles());
@@ -228,7 +228,13 @@ class HomeScreen extends StatelessWidget {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // Optionally, add a Lottie error animation here.
+                                  // Lottie animation for network error.
+                                  Lottie.asset(
+                                    'assets/lottie/network_error.json',
+                                    width: 200,
+                                    repeat: true,
+                                  ),
+                                  const SizedBox(height: 16),
                                   const Text(
                                     'Error loading articles.\nPlease check your connection.',
                                     textAlign: TextAlign.center,
