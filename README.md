@@ -1,10 +1,9 @@
 # Flutter Article App
+
+A Flutter app that fetches and displays a list of articles from a public API. The app allows users to browse, search, view article details, and mark articles as favorites.
 <div>
 <img src="assets/screenshots/BharatNXT.gif" alt="Animated logo" /><br/>
 </div>
-
-
-A Flutter app that fetches and displays a list of articles from a public API. The app allows users to browse, search, view article details, and mark articles as favorites.
 
 ---
 
