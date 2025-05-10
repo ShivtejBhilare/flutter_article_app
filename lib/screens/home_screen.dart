@@ -9,6 +9,7 @@ import '../bloc/favourite_bloc.dart';
 import '../bloc/favourite_event.dart';
 import '../bloc/favourite_state.dart';
 import '../bloc/theme_cubit.dart';
+import '../company_colors.dart'; // Import the company color palette
 import '../models/article.dart';
 import 'article_detail_screen.dart';
 import 'favourite_screen.dart';
@@ -49,7 +50,7 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
-          // Button to navigate to Favourite Articles Screen
+          // Favorite Articles Page Button
           IconButton(
             icon: const Icon(Icons.favorite),
             onPressed: () {
@@ -62,7 +63,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: GestureDetector(
-        // On tapping anywhere, remove focus (so the search field doesn't auto-focus)
+        // Prevents automatic focus on search bar when returning from ArticleDetailScreen
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
         },
@@ -84,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
-            // Expanded section for the articles list (or error state)
+            // Articles List with Pull-to-Refresh
             Expanded(
               child: BlocBuilder<ArticleBloc, ArticleState>(
                 builder: (context, state) {
@@ -99,8 +100,9 @@ class HomeScreen extends StatelessWidget {
                         context.read<ArticleBloc>().add(FetchArticles());
                         return Future.delayed(const Duration(milliseconds: 500));
                       },
-                      color: Colors.blueAccent,
-                      backgroundColor: Colors.white,
+                      // Refresh indicator now uses the company color palette:
+                      color: CompanyColors.secondary, // Accent color (warm yellow)
+                      backgroundColor: CompanyColors.background, // Background (white)
                       height: 100,
                       child: ListView.builder(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -112,8 +114,7 @@ class HomeScreen extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
+                            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
@@ -121,10 +122,9 @@ class HomeScreen extends StatelessWidget {
                                   tag: 'title-${article.id}',
                                   child: Text(
                                     article.title,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge
-                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 subtitle: Padding(
@@ -133,30 +133,23 @@ class HomeScreen extends StatelessWidget {
                                     article.body.length > 50
                                         ? '${article.body.substring(0, 50)}...'
                                         : article.body,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                        color: Colors.grey.shade600),
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: Colors.grey.shade600,
+                                    ),
                                   ),
                                 ),
                                 trailing: BlocBuilder<FavouriteBloc, FavouriteState>(
                                   builder: (context, favState) {
                                     bool isFavourite = favState is FavouriteLoaded &&
-                                        favState.favourites
-                                            .any((fav) => fav.id == article.id);
+                                        favState.favourites.any((fav) => fav.id == article.id);
                                     return IconButton(
                                       icon: Icon(
-                                        isFavourite
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
+                                        isFavourite ? Icons.favorite : Icons.favorite_border,
                                         color: isFavourite ? Colors.red : Colors.grey,
                                         size: 26,
                                       ),
                                       onPressed: () {
-                                        context
-                                            .read<FavouriteBloc>()
-                                            .add(ToggleFavourite(article));
+                                        context.read<FavouriteBloc>().add(ToggleFavourite(article));
                                       },
                                     );
                                   },
@@ -165,12 +158,9 @@ class HomeScreen extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          ArticleDetailScreen(article: article),
-                                      transitionsBuilder: (context, animation,
-                                          secondaryAnimation, child) {
-                                        return FadeTransition(
-                                            opacity: animation, child: child);
+                                      pageBuilder: (_, __, ___) => ArticleDetailScreen(article: article),
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        return FadeTransition(opacity: animation, child: child);
                                       },
                                     ),
                                   );
@@ -182,14 +172,15 @@ class HomeScreen extends StatelessWidget {
                       ),
                     );
                   } else if (state is ArticleError) {
-                    // Use LiquidPullToRefresh for error state as well
+                    // Use LiquidPullToRefresh in the error state as well
                     return LiquidPullToRefresh(
                       onRefresh: () async {
                         context.read<ArticleBloc>().add(FetchArticles());
                         return Future.delayed(const Duration(milliseconds: 500));
                       },
-                      color: Colors.blueAccent,
-                      backgroundColor: Colors.white,
+                      // Using the same palette for consistency:
+                      color: CompanyColors.secondary,
+                      backgroundColor: CompanyColors.background,
                       height: 100,
                       child: ListView(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -209,9 +200,7 @@ class HomeScreen extends StatelessWidget {
                                   const Text(
                                     'Network not available. Please check your connection.',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),
