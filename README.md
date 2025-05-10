@@ -107,7 +107,7 @@ This app uses the **BLoC (Business Logic Component) pattern** for state manageme
 <table>
 <tr>
  <td align="center" width="160">
-   <img src="assets/screenshots/app_icon.jpg" alt="App Icon" width="120" height="120"/><br/>
+   <img src="assets/screenshots/app_icon.jpg" alt="App Icon" width="120" height="240"/><br/>
    <sub>App Icon & App Name</sub>
  </td>
  <td align="center" width="160">
@@ -129,7 +129,8 @@ This app uses the **BLoC (Business Logic Component) pattern** for state manageme
    <sub>Article Details Screen</sub>
  </td>
  <td align="center" width="160">
-   <!-- Empty cell for symmetry -->
+   <img src="assets/screenshots/loading.jpg" alt="Article Details" width="120" height="240"/><br/>
+   <sub>Loading animation</sub>
  </td>
 </tr>
 </table>
