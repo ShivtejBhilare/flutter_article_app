@@ -8,7 +8,7 @@ import '../models/article.dart';
 import 'article_detail_screen.dart';
 
 class FavouriteScreen extends StatefulWidget {
-  const FavouriteScreen({super.key});
+  const FavouriteScreen({Key? key}) : super(key: key);
 
   @override
   State<FavouriteScreen> createState() => _FavouriteScreenState();
@@ -23,7 +23,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       appBar: AppBar(
         title: const Text('Favourite Articles'),
         actions: [
-          // Light/Dark Mode Toggle Button
+          // Light/Dark Mode toggle using ToggleButtons
           BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, themeMode) {
               return Padding(
@@ -54,7 +54,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       ),
       body: Column(
         children: [
-          // Search Field for Favorites
+          // Search field for filtering favourite articles
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -88,9 +88,10 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   }
 
                   return ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: filteredFavourites.length,
                     itemBuilder: (context, index) {
-                      Article article = filteredFavourites[index];
+                      final Article article = filteredFavourites[index];
                       return Card(
                         elevation: 4,
                         shape: RoundedRectangleBorder(
@@ -100,49 +101,77 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ListTile(
+                            // Hero with a flight shuttle builder and a BlocBuilder to update theme changes
                             title: Hero(
                               tag: 'title-${article.id}',
-                              child: Text(
-                                article.title,
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              flightShuttleBuilder: (
+                                  BuildContext flightContext,
+                                  Animation<double> animation,
+                                  HeroFlightDirection flightDirection,
+                                  BuildContext fromHeroContext,
+                                  BuildContext toHeroContext,
+                                  ) {
+                                // Build using the destination context to pick up the updated theme.
+                                return Text(
+                                  article.title,
+                                  style: Theme.of(toHeroContext)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                );
+                              },
+                              child: BlocBuilder<ThemeCubit, ThemeMode>(
+                                builder: (context, themeMode) {
+                                  return Text(
+                                    article.title,
+                                    key: ValueKey(themeMode),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                  );
+                                },
                               ),
                             ),
+                            // Display a truncated version of the article body.
                             subtitle: Padding(
                               padding: const EdgeInsets.only(top: 6.0),
                               child: Text(
                                 article.body.length > 50
                                     ? '${article.body.substring(0, 50)}...'
                                     : article.body,
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey.shade600,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(color: Colors.grey.shade600),
                               ),
                             ),
-                            trailing: BlocBuilder<FavouriteBloc, FavouriteState>(
-                              builder: (context, favState) {
-                                bool isFavourite = favState is FavouriteLoaded &&
-                                    favState.favourites.any((fav) => fav.id == article.id);
-                                return IconButton(
-                                  icon: Icon(
-                                    isFavourite ? Icons.favorite : Icons.favorite_border,
-                                    color: isFavourite ? Colors.red : Colors.grey,
-                                    size: 26,
-                                  ),
-                                  onPressed: () {
-                                    context.read<FavouriteBloc>().add(ToggleFavourite(article));
-                                  },
-                                );
+                            // Favourite toggle button (assumed always favourited in Favourites screen)
+                            trailing: IconButton(
+                              icon: const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 26,
+                              ),
+                              onPressed: () {
+                                context
+                                    .read<FavouriteBloc>()
+                                    .add(ToggleFavourite(article));
                               },
                             ),
+                            // Navigate to the article details with fade transition.
                             onTap: () {
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) => ArticleDetailScreen(article: article),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    return FadeTransition(opacity: animation, child: child);
+                                  pageBuilder: (_, __, ___) =>
+                                      ArticleDetailScreen(article: article),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
                                   },
                                 ),
                               );
@@ -153,7 +182,12 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     },
                   );
                 } else if (state is FavouriteError) {
-                  return Center(child: Text('Error: ${state.message}'));
+                  return Center(
+                    child: Text(
+                      'Error: ${state.message}',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                  );
                 }
                 return const SizedBox.shrink();
               },

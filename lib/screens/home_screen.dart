@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:lottie/lottie.dart';
 import '../bloc/article_bloc.dart';
 import '../bloc/article_event.dart';
 import '../bloc/article_state.dart';
@@ -9,7 +8,6 @@ import '../bloc/favourite_bloc.dart';
 import '../bloc/favourite_event.dart';
 import '../bloc/favourite_state.dart';
 import '../bloc/theme_cubit.dart';
-import '../company_colors.dart'; // Import the company color palette
 import '../models/article.dart';
 import 'article_detail_screen.dart';
 import 'favourite_screen.dart';
@@ -21,7 +19,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Articles'),
+        title: Text('Articles'),
         actions: [
           // Light/Dark Mode Toggle Button using ToggleButtons
           BlocBuilder<ThemeCubit, ThemeMode>(
@@ -50,7 +48,7 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
-          // Favorite Articles Page Button
+          // Navigate to Favourite Articles Screen
           IconButton(
             icon: const Icon(Icons.favorite),
             onPressed: () {
@@ -63,7 +61,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: GestureDetector(
-        // Prevents automatic focus on search bar when returning from ArticleDetailScreen
+        // Remove focus when tapping anywhere.
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
         },
@@ -85,7 +83,7 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
-            // Articles List with Pull-to-Refresh
+            // Expanded widget for the list of articles (or error state)
             Expanded(
               child: BlocBuilder<ArticleBloc, ArticleState>(
                 builder: (context, state) {
@@ -100,9 +98,8 @@ class HomeScreen extends StatelessWidget {
                         context.read<ArticleBloc>().add(FetchArticles());
                         return Future.delayed(const Duration(milliseconds: 500));
                       },
-                      // Refresh indicator now uses the company color palette:
-                      color: CompanyColors.secondary, // Accent color (warm yellow)
-                      backgroundColor: CompanyColors.background, // Background (white)
+                      color: Colors.blueAccent, // Customize as needed.
+                      backgroundColor: Colors.white,
                       height: 100,
                       child: ListView.builder(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -118,26 +115,56 @@ class HomeScreen extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ListTile(
+                                // Hero widget with a flight shuttle builder and a BlocBuilder for theme changes.
                                 title: Hero(
                                   tag: 'title-${article.id}',
-                                  child: Text(
-                                    article.title,
-                                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  flightShuttleBuilder: (
+                                      BuildContext flightContext,
+                                      Animation<double> animation,
+                                      HeroFlightDirection flightDirection,
+                                      BuildContext fromHeroContext,
+                                      BuildContext toHeroContext,
+                                      ) {
+                                    // Build using the destination's context to pick up the updated theme.
+                                    return Text(
+                                      article.title,
+                                      style: Theme.of(toHeroContext)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(fontWeight: FontWeight.bold),
+                                    );
+                                  },
+                                  child: BlocBuilder<ThemeCubit, ThemeMode>(
+                                    builder: (context, themeMode) {
+                                      // Using the current theme data for the Text widget.
+                                      return Text(
+                                        article.title,
+                                        // The value of themeMode is used as key to force rebuild.
+                                        key: ValueKey(themeMode),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
+                                // Article subtitle showing a truncated article body.
                                 subtitle: Padding(
                                   padding: const EdgeInsets.only(top: 6.0),
                                   child: Text(
                                     article.body.length > 50
                                         ? '${article.body.substring(0, 50)}...'
                                         : article.body,
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: Colors.grey.shade600,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(color: Colors.grey.shade600),
                                   ),
                                 ),
+                                // Toggle favourite using FavouriteBloc.
                                 trailing: BlocBuilder<FavouriteBloc, FavouriteState>(
                                   builder: (context, favState) {
                                     bool isFavourite = favState is FavouriteLoaded &&
@@ -154,11 +181,13 @@ class HomeScreen extends StatelessWidget {
                                     );
                                   },
                                 ),
+                                // Navigate to ArticleDetailScreen using a fade transition.
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) => ArticleDetailScreen(article: article),
+                                      pageBuilder: (_, __, ___) =>
+                                          ArticleDetailScreen(article: article),
                                       transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                         return FadeTransition(opacity: animation, child: child);
                                       },
@@ -172,15 +201,14 @@ class HomeScreen extends StatelessWidget {
                       ),
                     );
                   } else if (state is ArticleError) {
-                    // Use LiquidPullToRefresh in the error state as well
+                    // Show error state with pull-to-refresh enabled.
                     return LiquidPullToRefresh(
                       onRefresh: () async {
                         context.read<ArticleBloc>().add(FetchArticles());
                         return Future.delayed(const Duration(milliseconds: 500));
                       },
-                      // Using the same palette for consistency:
-                      color: CompanyColors.secondary,
-                      backgroundColor: CompanyColors.background,
+                      color: Colors.blueAccent,
+                      backgroundColor: Colors.white,
                       height: 100,
                       child: ListView(
                         physics: const AlwaysScrollableScrollPhysics(),
@@ -191,14 +219,8 @@ class HomeScreen extends StatelessWidget {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Lottie.asset(
-                                    'assets/lottie/network_error.json',
-                                    width: 200,
-                                    repeat: true,
-                                  ),
-                                  const SizedBox(height: 16),
                                   const Text(
-                                    'Network not available. Please check your connection.',
+                                    'Error loading articles.',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                                   ),
