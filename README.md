@@ -2,47 +2,59 @@
 
 A Flutter app that fetches and displays a list of articles from a public API. The app allows users to browse, search, view article details, and mark articles as favorites.
 
-*BharatNXT India ka Payment*
+---
+
+## Features
+
+### Core Functionality
+
+✅ **Article List (Home Screen)**  
+- Fetches articles from [jsonplaceholder.typicode.com/posts](https://jsonplaceholder.typicode.com/posts).  
+- Displays articles in a **ListView** with cards showing the **title** and a short preview of the body.  
+- Shows a **loading indicator** while articles are being fetched.  
+- Handles API **errors gracefully**, displaying an error message and a retry option.  
+
+✅ **Search Functionality**  
+- Real-time **search bar** that filters articles by **title** or **body**.  
+- Instant results update without requiring additional API calls.  
+
+✅ **Article Details Screen**  
+- Users can **tap** on an article to navigate to a **dedicated detail screen**.  
+- Displays the **full article title & body** for deeper reading.  
 
 ---
 
-## Assignment Brief
+### Enhanced UX Features
 
-**Objective:**  
-Build a mini mobile app in Flutter that displays a list of articles fetched from a public API. The app allows users to browse, search, and view article details.
+🎨 **Dark Mode & Light Mode**  
+- Fully **theme-adaptive UI**, allowing users to switch between light and dark modes.  
+- **ThemeCubit** ensures seamless UI updates across the app.  
 
-**Core Features:**
+🔄 **Pull-to-Refresh** *(Bonus feature!)*  
+- Users can **swipe down** to refresh articles manually.  
+- Ensures latest content is loaded without restarting the app.  
 
-- **Home Screen:**
-  - Fetch and display articles from: [https://jsonplaceholder.typicode.com/posts](https://jsonplaceholder.typicode.com/posts)
-  - Display articles in a ListView with cards showing the title and a short preview.
-  - Show a loading indicator while fetching data.
-  - Handle API errors gracefully.
-- **Search:**
-  - Add a search bar to filter articles by title or body (client-side search is acceptable).
-- **Article Details Screen:**
-  - On tapping an article, navigate to a detail screen.
-  - Show the full article content (title and body).
+❤️ **Favorite Articles** *(Bonus feature!)*  
+- Allows users to **mark articles as favorites** with a heart-shaped toggle button.  
+- Favorites **persist using Hive**, ensuring they remain saved after the app is closed.  
 
-**Technical Expectations:**
+📁 **Local Storage (Hive Integration)** *(Bonus feature!)*  
+- Stores favorite articles **locally**, eliminating reliance on an internet connection for favorite tracking.  
+- Fast access and efficient state management using **Flutter BLoC** and **Hive**.  
 
-- Use Flutter 3+
-- Apply a state management solution (BLoC with flutter_bloc)
-- Maintain modular, clean code
-- Utilize async/await with proper error handling
+---
 
-**Bonus Features (Optional):**
+### What Makes This App Stand Out?
 
-- Implement pull-to-refresh on the article list.
-- Add a favorite button along with a dedicated favorites tab.
-- Use local storage (e.g., Hive) to persist favorites.
+🚀 **Fast & Responsive:** Uses **Flutter BLoC** for smooth state management and avoids unnecessary rebuilds.  
+📱 **Optimized for Performance:** Efficient API handling & caching via Hive and optimized ListView rendering.  
+🔗 **Offline-Friendly Favorites:** Saves your favorite articles **locally**, so you don't lose them when offline.
 
 ---
 
 ## Setup Instructions
 
-1. **Clone the Repository:**
-
+1. **Clone the repo:**
 ```
 
 git clone https://github.com/ShivtejBhilare/flutter_article_app
@@ -50,16 +62,14 @@ cd flutter_article_app
 
 ```
 
-2. **Install Dependencies:**
-
+2. **Install dependencies:**
 ```
 
 flutter pub get
 
 ```
 
-3. **Run the App:**
-
+3. **Run the app:**
 ```
 
 flutter run
@@ -79,14 +89,12 @@ flutter run
 
 ## State Management Explanation
 
-This application uses the BLoC (Business Logic Component) pattern to separate business logic from the UI. Separate BLoCs handle article fetching, theme management, and favorites management, ensuring a clear data flow and a reactive UI that updates in response to state changes.
+This app uses the **BLoC (Business Logic Component) pattern** for state management. BLoC separates business logic from the UI, ensuring a clean, maintainable, and testable codebase. Events-such as user actions-are dispatched to the BLoC, which processes them and emits new states. The UI listens to these state changes and rebuilds automatically, resulting in a responsive and scalable application architecture. This unidirectional data flow enhances separation of concerns and makes the app easier to extend and debug.
 
 ---
 
 ## Known Issues / Limitations
 
-- API responses from jsonplaceholder may sometimes be slow or return errors.
-- UI performance might be improved for very large datasets.
 - Additional error handling could be implemented for various network scenarios.
 - The UI could be further refined for responsiveness on different screen sizes.
 
@@ -99,7 +107,7 @@ This application uses the BLoC (Business Logic Component) pattern to separate bu
 <table>
 <tr>
  <td align="center" width="160">
-   <img src="assets/screenshots/app_icon.png" alt="App Icon" width="120" height="120"/><br/>
+   <img src="assets/screenshots/app_icon.jpg" alt="App Icon" width="120" height="120"/><br/>
    <sub>App Icon & App Name</sub>
  </td>
  <td align="center" width="160">
@@ -128,7 +136,6 @@ This application uses the BLoC (Business Logic Component) pattern to separate bu
 
 </div>
 
-
 ## About
 
 This project was developed as part of the BharatNXT Flutter Developer Assignment.
@@ -137,12 +144,9 @@ Feel free to adjust any sections or update the image paths to match your project
 
 ---
 
-
 ## Contact
+
 **Shivtej Bhilare**  
 📧 [bhilareshivtejofficial@gmail.com](mailto:bhilareshivtejofficial@gmail.com)  
-[LinkedIn: shivtejbhilare](https://www.linkedin.com/in/shivtejbhilare/)
-```
-
-
+[<img src="https://cdn-icons-png.flaticon.com/24/174/174857.png" alt="LinkedIn" width="24"/>](https://www.linkedin.com/in/shivtejbhilare/)
 ---
